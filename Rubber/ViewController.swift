@@ -14,6 +14,7 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         self.rubberView.sourceImage = UIImage(named: "AAA.jpg")
         self.rubberView.clearRadius = 10
         

@@ -35,7 +35,7 @@ class RubberView: UIView {
         }
     }
     
-    var backImageView:UIImageView = UIImageView()
+    private var backImageView:UIImageView = UIImageView()
 
     var sourceImage:UIImage? {
         didSet{
@@ -46,12 +46,14 @@ class RubberView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.addSubview(self.backImageView)
+        self.rubberImage = RubberView.getRubberRoundImageByRadius(raduis: clearRadius)
         self.backgroundColor = UIColor.clear
     }
     
     override func awakeFromNib() {
         super.awakeFromNib()
         self.addSubview(self.backImageView)
+        self.rubberImage = RubberView.getRubberRoundImageByRadius(raduis: clearRadius)
         self.backgroundColor = UIColor.clear
     }
     
@@ -62,6 +64,10 @@ class RubberView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         self.backImageView.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height)
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.touchesMoved(touches, with: event)
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
