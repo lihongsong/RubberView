@@ -74,24 +74,31 @@ class RubberView: UIView {
         
         if sourceImage != nil && clearRadius > 0 {
             
-            let size = frame.size
             let rect = bounds
             
-            let touchPoint = touches.first!.location(in: self)
-            let clearRect = CGRect(x: Int(touchPoint.x) - clearRadius,
-                                   y: Int(touchPoint.y) - clearRadius,
-                                   width: clearRadius * 2,
-                                   height: clearRadius * 2)
+            let realRect = CGRect(origin: CGPoint.zero, size: sourceImage!.size)
             
-            UIGraphicsBeginImageContext(size)
+            let wScale:Float = Float(realRect.width) / Float(rect.width)
+            
+            let hScale :Float = Float(realRect.height) / Float(rect.height)
+            
+            let touchPoint = touches.first!.location(in: self)
+
+            let realClearRect = CGRect(x: Int((Float(touchPoint.x) - Float(clearRadius)) * wScale),
+                                       y: Int((Float(touchPoint.y) - Float(clearRadius)) * hScale),
+                                       width: Int(Float(clearRadius) * 2 * wScale),
+                                       height: Int(Float(clearRadius) * 2 * hScale))
+            
+            UIGraphicsBeginImageContext(realRect.size)
             let context = UIGraphicsGetCurrentContext()
             if  context != nil {
-                sourceImage!.draw(in: rect, blendMode: .normal, alpha: 1)
-                rubberImage!.draw(in: clearRect, blendMode: .destinationIn, alpha: 1) /* R = D*Sa */
+                sourceImage!.draw(in: realRect, blendMode: .normal, alpha: 1)
+                rubberImage!.draw(in: realClearRect, blendMode: .destinationIn, alpha: 1) /* R = D*Sa */
                 let image:UIImage? = UIGraphicsGetImageFromCurrentImageContext()
                 if let image = image {
                     self.sourceImage = image
                 }
+                UIGraphicsEndImageContext()
             }
         }
     }
